@@ -1,5 +1,7 @@
 ## Sladjan Miljkovic M158 LB2 
 
+### Projektplan (Mermaid)
+
 ```mermaid
 %%{
   init: {
@@ -42,3 +44,8 @@ gantt
     Tests durchführen           :e1, after d3, 4d
     Health Check                :e2, after e1, 1d
     Backup Automatisieren       :e3, after e2, 2d
+
+```
+
+### Architekturdiagramm
+
