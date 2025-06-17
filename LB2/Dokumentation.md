@@ -49,4 +49,4 @@ gantt
 
 ### Architekturdiagramm
 
-<img src="https://github.com/Sladji10/m158-miljkovic/blob/main/LB2/Screenshots_Beweise/Architekturdiagramm_Sladja.drawio.png?raw=true" width="750" />
+<img src="https://github.com/Sladji10/m158-miljkovic/blob/main/LB2/Screenshots_Beweise/Architekturdiagramm_Sladjan.drawio.png?raw=true" width="750" />
