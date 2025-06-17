@@ -49,3 +49,4 @@ gantt
 
 ### Architekturdiagramm
 
+<img src="https://github.com/Sladji10/m169-miljkovic/blob/main/Screenshots/2_9.png?raw=true" width="900" />
