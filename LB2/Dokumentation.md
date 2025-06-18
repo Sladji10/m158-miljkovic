@@ -51,127 +51,155 @@ gantt
 
 <img src="https://github.com/Sladji10/m158-miljkovic/blob/main/LB2/Screenshots_Beweise/Architekturdiagramm_Sladjan.drawio.png?raw=true" width="750" />
 
-## Aufgabe 3 – AWS-Umgebung einrichten
+## Aufgabe 3 – AWS-Umgebung einrichten (Stufe 3)
 
-### Stufe 3
+- **EC2-Instanz** mit Ubuntu 22.04 LTS über die AWS-Konsole erstellt
+- **Key-basierte SSH-Authentifizierung** eingerichtet (`miljkovic.pem`)
+- **Netzwerkstruktur** vollständig geplant und umgesetzt:
+  - **VPC**: ```10.0.10.0/24```
+  - **Subnetz**: ```10.0.10.0/24```
+  - **Elastic IP**: ```34.232.75.121```
+  - **Security Group**: Ports **22, 80, 443, 3306, 8888, 21, 21100–21110** freigegeben
 
-  - EC2-Instanz mit **Ubuntu 22.04** aufgesetzt
+## Aufgabe 4 – DNS-Konfiguration (Stufe 3)
 
-  - Zugriff per SSH mit Key-Authentifizierung funktioniert (miljkovic.pem)
+- DNS intern über die Datei `/etc/hosts` eingerichtet:
 
-  - Planung vollständig umgesetzt ***(Security Group, VPC, Subnetz, Elastic IP)***
+```
+34.232.75.121  miljkovic-m158.local
+```
 
-## Aufgabe 4 – DNS-Konfiguration
+- Damit wird die Domain lokal aufgelöst
 
-### Stufe 3
+## Aufgabe 5 – Webserver konfigurieren (Stufe 3)
 
-  - Domainauflösung über **/etc/hosts** eingerichtet: ```34.232.75.121  miljkovic-m158.local```
+- Apache2 im Docker-Container installiert
+- **Virtual Host** in `wordpress.conf` eingerichtet für HTTP und HTTPS
+- `mod_rewrite` aktiviert:
+  ```bash
+  sudo a2enmod rewrite && sudo systemctl reload apache2
+  ```
+- **HTTP → HTTPS**-Weiterleitung eingerichtet (Redirect im Port-80-VHost)
+- Apache Default Page wurde deaktiviert (`000-default.conf` disabled)
 
-## Aufgabe 5 – Webserver konfigurieren
+## Aufgabe 6 – PHP einrichten (Stufe 3)
 
-### Stufe 3
+- PHP 8.3 über Docker mit Apache betrieben
+- `php.ini` angepasst (via `custom.ini` gemountet):
+  ```ini
+  upload_max_filesize = 64M
+  post_max_size = 64M
+  display_errors = Off
+  ```
+- PHP-FPM aktiviert mit Socket `/run/php/php8.3-fpm.sock` über `SetHandler`
 
-  - Apache Virtual Host konfiguriert
+## Aufgabe 7 – MySQL/MariaDB aufsetzen (Stufe 3)
 
-  - mod_rewrite aktiviert
+- Dedizierter Container mit `mysql:8.0` verwendet
+- Zugriff auf Root-Account nur über `localhost` erlaubt
+- Benutzer für WordPress:
+  ```sql
+  CREATE USER 'wordpress_user'@'%' IDENTIFIED BY 'wordpress_pass';
+  GRANT ALL PRIVILEGES ON wordpress_db.* TO 'wordpress_user'@'%';
+  ```
+- Datenbank heisst `wordpress_db`, persistiert über Volume `db_data`
 
-  - HTTP → HTTPS-Weiterleitung eingerichtet
+## Aufgabe 8 – Web-Datenbanktool (Stufe 3)
 
-  - Keine Apache Default Page sichtbar
+- `phpmyadmin/phpmyadmin` im Container unter **Port 8888**:
+  ```
+  http://miljkovic-m158.local:8888
+  ```
+- TLS aktiviert über HTTPS mit selbst signiertem Zertifikat
+- Zugriff über Umgebungsvariablen gesteuert ***(`PMA_HOST`, `PMA_USER`, `PMA_PASSWORD`)***
 
-## Aufgabe 6 – PHP einrichten
+## Aufgabe 9 – FTP-Zugang einrichten (Stufe 3)
 
-### Stufe 3
+### FTP-Konfiguration (vsftpd)
 
-  - PHP 8.3 verwendet
+- Zertifikat:
+  - `/etc/ssl/certs/cert.pem`
+  - `/etc/ssl/private/key.pem`
+- Passive Ports: **21100–21110**
+- **TLS** aktiviert (`ssl_enable=YES`)
+- **Benutzer**: `ftptest`
 
-  - php.ini angepasst (z. B. upload_max_filesize, post_max_size etc.)
+### Benutzerübersicht
 
-  - PHP-FPM aktiviert (FastCGI Process Manager)
+| Benutzer     | Home-Verzeichnis | Shell            | Zugriffsrechte                         |
+|--------------|------------------|------------------|----------------------------------------|
+| ftptest | /var/www/html    | /usr/sbin/nologin | Lesen/Schreiben innerhalb `/html`      |
 
-## Aufgabe 7 – MySQL/MariaDB aufsetzen
+### Zugriff über FTPS (z. B. mit WinSCP)
 
-### Stufe 3
+- **Protokoll:** `FTP`
+- **Verschlüsselung:** `Explizites TLS/SSL`
+- **Port:** `21`
+- **Benutzername:** `ftptest`
+- **Passwort:** gesetzt via `sudo passwd wordpressftp`
 
-  - Root-Zugriff nur über localhost
+## Aufgabe 10 – WordPress migrieren (Stufe 3)
 
-  - WordPress-User mit eingeschränkten Rechten erstellt
+- Dateien per `FTP` oder `scp` nach `/var/www/html` übertragen
+- Dateirechte: `chown -R www-data:www-data /var/www/html`
+- SQL-Dump importiert mit `mysql` oder über phpMyAdmin
+- `wp-config.php` angepasst:
+  ```php
+  define('DB_NAME', 'wordpress_db');
+  define('DB_USER', 'wordpress_user');
+  define('DB_PASSWORD', 'wordpress_pass');
+  ```
+- In der Datenbank: `WP_HOME` und `WP_SITEURL` aktualisiert:
+  ```sql
+  UPDATE wp_options SET option_value='https://miljkovic-m158.local' WHERE option_name IN ('siteurl', 'home');
+  ```
+*(oder andere Variante einfach über phpmyadmin in der Tabelle ändern)*
 
-  - Dedicated Container für MariaDB
+## Aufgabe 11 – Backup-Konzept umsetzen (Stufe 3)
 
-## Aufgabe 8 – Web-Datenbanktool (phpMyAdmin/Adminer)
+### Backup-Skript (cron-job)
 
-### Stufe 3
+```bash
+#!/bin/bash
+DATE=$(date +%Y-%m-%d-%H%M)
+mysqldump -uwordpress_user -pwordpress_pass wordpress_db > ~/backups/db-$DATE.sql
+tar -czf ~/backups/files-$DATE.tar.gz /var/www/html
+```
 
-phpMyAdmin im eigenen Container
+- **Mail versenden**
+mail -s "WP Backup $DATUM" sladji.miljkovic135@gmail.com < $ZIPFILE
 
-Erreichbar unter ```http://miljkovic-m158.local:8888```
+- **Automatisierung** via `crontab -e`:
+```cron
+0 2 * * * /home/ubuntu/backups/backup.sh
+```
 
-Zugriff erfolgt über HTTPS mit selbst signiertem Zertifikat
+## Aufgabe 12 – Testing der Webapplikation (Stufe 3)
 
-## Aufgabe 9 – FTP-Zugang einrichten
+| Testfall                     | Ergebnis                    |
+|-----------------------------|-----------------------------|
+| **Admin-Login**                 | *Erfolgreich*                 |
+| **Beitrag erstellen**           | *Erfolgreich*                 |
+| **Datei-Upload**                | *Erfolgreich*                 |
+| **Theme aktivieren**            | *Erfolgreich*                 |
+| **Plugin installieren**         | *Erfolgreich*                 |
+| **Permalinks speichern**        | *Erfolgreich*                 |
+| **wp-config prüfen**            | *Erfolgreich*                 |
+| **DB-Zugriff**                  | *Erfolgreich*                 |
+| **Site-Health Check**           | *Sollte verbessert werden*    |
+| **et_support_center_divi Test** | *Erfolgreich (angepasst)*     |
 
-### Stufe 3
+## Aufgabe 13 – Deployment automatisieren (Stufe 3)
 
-FTPS-Zugriff eingerichtet (vsftpd + TLS)
 
-Benutzer mit Zugriff nur auf /var/www/html und Unterverzeichnisse
+## Aufgabe 14 – Docker verwenden (Stufe 3)
 
-Sichere Konfiguration mit verschlüsselter Übertragung
-
-## Aufgabe 10 – WordPress migrieren
-
-### Stufe 3
-
-Alle Dateien nach /var/www/html kopiert, Rechte korrekt gesetzt (www-data)
-
-Datenbank erfolgreich importiert, inkl. Anpassung von Domainnamen
-
-wp-config.php angepasst
-
-WP_HOME und WP_SITEURL in der Datenbank aktualisiert
-
-Admin-Login funktioniert (Passwort ggf. via SQL auf MD5-Hash gesetzt)
-
-## Aufgabe 11 – Backup-Konzept umsetzen
-
-### Stufe 3
-
-Backup-Skript mit cron eingerichtet
-
-Datenbank- und Datei-Backup erfolgt täglich
-
-Alte Backups werden automatisch gelöscht (Rotation)
-
-Backup-Skript verschickt E-Mail mit msmtp (SMTP konfiguriert mit Gmail)
-
-## Aufgabe 12 – Testing der Webapplikation
-
-### Stufe 3
-
-Mind. 10 spezifische Testfälle erstellt und getestet (z. B. Login, Upload, Beiträge erstellen)
-
-Seite /wp-admin/site-health.php zeigt "Sollte verbessert werden" (min. akzeptabel)
-
-Seite et_support_center_divi getestet (Permissions gefixt, Pfade angepasst)
-
-## Aufgabe 13 – Deployment automatisieren
-
-### Stufe 3
-
-CI/CD-Pipeline mit GitLab CI erstellt
-
-Deploy auf Staging- und Live-Umgebung bei Commit auf main bzw. staging
-
-Automatischer docker-compose up -d --build
-
-## Aufgabe 14 – Docker verwenden
-
-### Stufe 3
-
-Docker Compose verwendet
-
-Alle Services als Container (Apache+PHP, MariaDB, phpMyAdmin, FTP, WordPress)
-
-Volumes für Datenpersistenz, Secrets/Env-Vars für Sicherheit
-
+- Docker Compose verwendet mit Services:
+  - `web` (Apache + PHP)
+  - `db` (MySQL/MariaDB)
+  - `phpmyadmin`
+  - `ftp` (vsftpd)
+- Volumes:
+  - `db_data`
+  - `/var/www/html`
+- Secrets & Umgebungsvariablen in `docker-compose.yml` eingetragen
