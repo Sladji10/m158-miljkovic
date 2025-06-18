@@ -65,21 +65,19 @@ gantt
 
 ### Stufe 3
 
-  - DNS intern über eigenen DNS-Server eingerichtet (bind9)
-
-  - Domain **miljkovic-m158.local** korrekt mit EC2-Instanz verknüpft
+  - Domainauflösung über **/etc/hosts** eingerichtet: ```34.232.75.121  miljkovic-m158.local```
 
 ## Aufgabe 5 – Webserver konfigurieren
 
 ### Stufe 3
 
-Apache Virtual Host konfiguriert
+  - Apache Virtual Host konfiguriert
 
-mod_rewrite aktiviert
+  - mod_rewrite aktiviert
 
-HTTP → HTTPS-Weiterleitung eingerichtet
+  - HTTP → HTTPS-Weiterleitung eingerichtet
 
-Keine Apache Default Page sichtbar
+  - Keine Apache Default Page sichtbar
 
 ## Aufgabe 6 – PHP einrichten
 
@@ -107,7 +105,7 @@ Keine Apache Default Page sichtbar
 
 phpMyAdmin im eigenen Container
 
-Erreichbar unter http://miljkovic-m158.local:8888
+Erreichbar unter ```http://miljkovic-m158.local:8888```
 
 Zugriff erfolgt über HTTPS mit selbst signiertem Zertifikat
 
