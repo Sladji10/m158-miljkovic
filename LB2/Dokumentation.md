@@ -167,7 +167,7 @@ tar -czf ~/backups/files-$DATE.tar.gz /var/www/html
 ```
 
 - **Mail versenden**
-mail -s "WP Backup $DATUM" sladji.miljkovic135@gmail.com < $ZIPFILE
+mail -s "WP Backup $DATUM" sladji.miljkovic135@gmail.com < *(filename z.B docker-compose.yml)*
 
 - **Automatisierung** via `crontab -e`:
 ```cron
