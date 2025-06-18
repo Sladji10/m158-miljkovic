@@ -49,7 +49,7 @@ gantt
 
 ## Aufgabe 2 – Architekturdiagramm erstellen
 
-<img src="https://github.com/Sladji10/m158-miljkovic/blob/main/LB2/Screenshots_Beweise/Architekturdiagramm_Sladjan.drawio.png?raw=true" width="750" />
+
 
 ## Aufgabe 3 – AWS-Umgebung einrichten (Stufe 3)
 
