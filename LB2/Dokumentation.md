@@ -162,12 +162,25 @@ gantt
 ```bash
 #!/bin/bash
 DATE=$(date +%Y-%m-%d-%H%M)
-mysqldump -uwordpress_user -pwordpress_pass wordpress_db > ~/backups/db-$DATE.sql
-tar -czf ~/backups/files-$DATE.tar.gz /var/www/html
-```
+BACKUP_DIR=~/backups
 
-- **Mail versenden**
-mail -s "WP Backup $DATUM" sladji.miljkovic135@gmail.com < *(filename z.B docker-compose.yml)*
+mkdir -p $BACKUP_DIR
+
+docker exec mysql_db mysqldump -uwordpress_user -pwordpress_pass wordpress_db > "$BACKUP_DIR/db-$DATE.sql"
+
+tar -czf "$BACKUP_DIR/files-$DATE.tar.gz" /var/www/html
+
+echo "Backup erfolgreich: $DATE" | msmtp -a default -t <<EOF
+To: sladji.miljkovic135@gmail.com
+Subject: WordPress Dateien Backup $DATE
+
+Das Backup wurde erfolgreich erstellt und wurde unter dem Ordner Backups gespeichert:
+- db-$DATE.sql
+- files-$DATE.tar.gz
+
+Viele Grüsse vom Server, Welcome und Yellehhhh!
+EOF
+```
 
 - **Automatisierung** via `crontab -e`:
 ```cron
