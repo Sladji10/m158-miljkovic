@@ -53,167 +53,127 @@ gantt
 
 ## Aufgabe 3 – AWS-Umgebung einrichten
 
-### Stufe 1
+### Stufe 3
 
-Fügen Sie hier Ihre Ergebnisse ein
+  - EC2-Instanz mit **Ubuntu 22.04** aufgesetzt
 
-### Stufe 2
+  - Zugriff per SSH mit Key-Authentifizierung funktioniert (miljkovic.pem)
 
-Fügen Sie hier Ihre Ergebnisse ein
-
----
+  - Planung vollständig umgesetzt ***(Security Group, VPC, Subnetz, Elastic IP)***
 
 ## Aufgabe 4 – DNS-Konfiguration
 
-Ändern Sie die Stufe, für die Sie sich entschieden haben, selbst.
+### Stufe 3
 
-### Stufe ?
+  - DNS intern über eigenen DNS-Server eingerichtet (bind9)
 
-Fügen Sie hier Ihre Ergebnisse ein
-
----
+  - Domain **miljkovic-m158.local** korrekt mit EC2-Instanz verknüpft
 
 ## Aufgabe 5 – Webserver konfigurieren
 
-### Stufe 1
-
-Fügen Sie hier Ihre Ergebnisse ein
-
-### Stufe 2
-
-Fügen Sie hier Ihre Ergebnisse ein
-
 ### Stufe 3
 
-Fügen Sie hier Ihre Ergebnisse ein
+Apache Virtual Host konfiguriert
 
----
+mod_rewrite aktiviert
+
+HTTP → HTTPS-Weiterleitung eingerichtet
+
+Keine Apache Default Page sichtbar
 
 ## Aufgabe 6 – PHP einrichten
 
-### Stufe 1
-
-Fügen Sie hier Ihre Ergebnisse ein
-
-### Stufe 2
-
-Fügen Sie hier Ihre Ergebnisse ein
-
 ### Stufe 3
 
-Fügen Sie hier Ihre Ergebnisse ein
+  - PHP 8.3 verwendet
 
----
+  - php.ini angepasst (z. B. upload_max_filesize, post_max_size etc.)
+
+  - PHP-FPM aktiviert (FastCGI Process Manager)
 
 ## Aufgabe 7 – MySQL/MariaDB aufsetzen
 
-### Stufe 1
-
-Fügen Sie hier Ihre Ergebnisse ein
-
-### Stufe 2
-
-Fügen Sie hier Ihre Ergebnisse ein
-
 ### Stufe 3
 
-Fügen Sie hier Ihre Ergebnisse ein
+  - Root-Zugriff nur über localhost
 
----
+  - WordPress-User mit eingeschränkten Rechten erstellt
+
+  - Dedicated Container für MariaDB
 
 ## Aufgabe 8 – Web-Datenbanktool (phpMyAdmin/Adminer)
 
-### Stufe 1
-
-Fügen Sie hier Ihre Ergebnisse ein
-
-### Stufe 2
-
-Fügen Sie hier Ihre Ergebnisse ein
-
 ### Stufe 3
 
-Fügen Sie hier Ihre Ergebnisse ein
+phpMyAdmin im eigenen Container
 
----
+Erreichbar unter http://miljkovic-m158.local:8888
+
+Zugriff erfolgt über HTTPS mit selbst signiertem Zertifikat
 
 ## Aufgabe 9 – FTP-Zugang einrichten
 
-### Stufe 1
+### Stufe 3
 
-Fügen Sie hier Ihre Ergebnisse ein
+FTPS-Zugriff eingerichtet (vsftpd + TLS)
 
-### Stufe 2
+Benutzer mit Zugriff nur auf /var/www/html und Unterverzeichnisse
 
-Fügen Sie hier Ihre Ergebnisse ein
-
----
+Sichere Konfiguration mit verschlüsselter Übertragung
 
 ## Aufgabe 10 – WordPress migrieren
 
-### Stufe 1
-
-Fügen Sie hier Ihre Ergebnisse ein
-
-### Stufe 2
-
-Fügen Sie hier Ihre Ergebnisse ein
-
 ### Stufe 3
 
-Fügen Sie hier Ihre Ergebnisse ein
+Alle Dateien nach /var/www/html kopiert, Rechte korrekt gesetzt (www-data)
 
----
+Datenbank erfolgreich importiert, inkl. Anpassung von Domainnamen
+
+wp-config.php angepasst
+
+WP_HOME und WP_SITEURL in der Datenbank aktualisiert
+
+Admin-Login funktioniert (Passwort ggf. via SQL auf MD5-Hash gesetzt)
 
 ## Aufgabe 11 – Backup-Konzept umsetzen
 
-### Stufe 1
+### Stufe 3
 
-Fügen Sie hier Ihre Ergebnisse ein
+Backup-Skript mit cron eingerichtet
 
-### Stufe 2
+Datenbank- und Datei-Backup erfolgt täglich
 
-Fügen Sie hier Ihre Ergebnisse ein
+Alte Backups werden automatisch gelöscht (Rotation)
 
----
+Backup-Skript verschickt E-Mail mit msmtp (SMTP konfiguriert mit Gmail)
 
 ## Aufgabe 12 – Testing der Webapplikation
 
-### Stufe 1
-
-Fügen Sie hier Ihre Ergebnisse ein
-
-### Stufe 2
-
-Fügen Sie hier Ihre Ergebnisse ein
-
 ### Stufe 3
 
-Fügen Sie hier Ihre Ergebnisse ein
+Mind. 10 spezifische Testfälle erstellt und getestet (z. B. Login, Upload, Beiträge erstellen)
 
----
+Seite /wp-admin/site-health.php zeigt "Sollte verbessert werden" (min. akzeptabel)
+
+Seite et_support_center_divi getestet (Permissions gefixt, Pfade angepasst)
 
 ## Aufgabe 13 – Deployment automatisieren
 
-### Stufe 1
-
-Fügen Sie hier Ihre Ergebnisse ein
-
-### Stufe 2
-
-Fügen Sie hier Ihre Ergebnisse ein
-
 ### Stufe 3
 
-Fügen Sie hier Ihre Ergebnisse ein
+CI/CD-Pipeline mit GitLab CI erstellt
 
----
+Deploy auf Staging- und Live-Umgebung bei Commit auf main bzw. staging
+
+Automatischer docker-compose up -d --build
 
 ## Aufgabe 14 – Docker verwenden
 
-### Stufe 1 - 3
+### Stufe 3
 
-Fügen Sie hier Ihre Ergebnisse ein
+Docker Compose verwendet
 
----
+Alle Services als Container (Apache+PHP, MariaDB, phpMyAdmin, FTP, WordPress)
+
+Volumes für Datenpersistenz, Secrets/Env-Vars für Sicherheit
 
