@@ -71,6 +71,8 @@ gantt
 
 - Damit wird die Domain lokal aufgelöst
 
+<img src="https://github.com/Sladji10/m158-miljkovic/blob/main/LB2/Screenshots_Beweise/2.png?raw=true" width="750" />
+
 ## Aufgabe 5 – Webserver konfigurieren (Stufe 3)
 
 - Apache2 im Docker-Container installiert
@@ -182,6 +184,8 @@ Viele Grüsse vom Server, Welcome und Yellehhhh!
 EOF
 ```
 
+<img src="https://github.com/Sladji10/m158-miljkovic/blob/main/LB2/Screenshots_Beweise/3.png?raw=true" width="750" />
+
 - **Automatisierung** via `crontab -e`:
 ```cron
 0 2 * * * /home/ubuntu/backups/backup.sh
@@ -201,6 +205,8 @@ EOF
 | **DB-Zugriff**                  | *Erfolgreich*                 |
 | **Site-Health Check**           | *Sollte verbessert werden*    |
 | **et_support_center_divi Test** | *Erfolgreich (angepasst)*     |
+
+<img src="https://github.com/Sladji10/m158-miljkovic/blob/main/LB2/Screenshots_Beweise/1.png?raw=true" width="750" />
 
 ## Aufgabe 13 – Deployment automatisieren (Stufe 3)
 
